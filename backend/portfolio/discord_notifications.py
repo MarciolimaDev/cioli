@@ -15,6 +15,7 @@ def send_contact_message_notification(contact_message) -> None:
 		return
 
 	created_at = timezone.localtime(contact_message.created).strftime("%d/%m/%Y %H:%M")
+	environment_label = "Desenvolvimento" if settings.DEBUG else "Produção"
 	payload = {
 		"username": "CIOLI - Contato",
 		"content": "📩 Novo contato recebido pelo site",
@@ -23,6 +24,7 @@ def send_contact_message_notification(contact_message) -> None:
 				"title": "Nova mensagem de contato",
 				"color": 3447003,
 				"fields": [
+					{"name": "Ambiente", "value": environment_label, "inline": False},
 					{"name": "Nome", "value": contact_message.full_name[:1024], "inline": False},
 					{"name": "Email", "value": contact_message.email[:1024], "inline": False},
 					{"name": "Telefone", "value": contact_message.phone[:1024], "inline": False},

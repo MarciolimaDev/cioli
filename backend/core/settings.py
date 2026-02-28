@@ -34,6 +34,16 @@ def env_to_list(name: str, default: str = '') -> list[str]:
     return [item.strip() for item in raw.split(',') if item.strip()]
 
 
+def env_to_int(name: str, default: int) -> int:
+    value = os.getenv(name)
+    if value is None or not value.strip():
+        return default
+    try:
+        return int(value.strip())
+    except ValueError:
+        return default
+
+
 def get_database_from_url(database_url: str) -> dict:
     parsed = urlparse(database_url)
     if parsed.scheme not in {'postgres', 'postgresql'}:
@@ -97,6 +107,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'core.security_monitoring.SecurityMonitoringMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -261,6 +272,12 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
+    'DEFAULT_THROTTLE_RATES': {
+        'contact_message_submit': os.getenv('CONTACT_MESSAGE_THROTTLE_RATE', '5/minute').strip(),
+    },
 }
 
 DISCORD_CONTACT_WEBHOOK_URL = os.getenv('DISCORD_CONTACT_WEBHOOK_URL', '').strip()
+DISCORD_SECURITY_WEBHOOK_URL = os.getenv('DISCORD_SECURITY_WEBHOOK_URL', '').strip()
+SECURITY_ALERTS_ENABLED = env_to_bool('SECURITY_ALERTS_ENABLED', True)
+SECURITY_ALERTS_RATE_LIMIT_PER_MINUTE = env_to_int('SECURITY_ALERTS_RATE_LIMIT_PER_MINUTE', 120)

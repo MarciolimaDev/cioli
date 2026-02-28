@@ -3,6 +3,7 @@ from rest_framework.mixins import CreateModelMixin
 from rest_framework.viewsets import GenericViewSet
 
 from .models import AboutContent, Category, ContactSubject, Formation, Project, Technology
+from .throttles import ContactMessageRateThrottle
 from .serializers import (
 	AboutContentSerializer,
 	CategorySerializer,
@@ -42,6 +43,7 @@ class ContactSubjectViewSet(viewsets.ReadOnlyModelViewSet):
 
 class ContactMessageViewSet(CreateModelMixin, GenericViewSet):
 	serializer_class = ContactMessageSerializer
+	throttle_classes = [ContactMessageRateThrottle]
 
 	def perform_create(self, serializer):
 		contact_message = serializer.save()
