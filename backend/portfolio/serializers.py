@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Category, ContactMessage, ContactSubject, Formation, Project, Technology
+from .models import AboutContent, Category, ContactMessage, ContactSubject, Formation, Project, Technology
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -106,3 +106,10 @@ class ContactMessageSerializer(serializers.ModelSerializer):
             "update",
         ]
         read_only_fields = ["hash", "status", "created", "update"]
+
+
+class AboutContentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AboutContent
+        fields = ["id", "title", "hero_image", "created", "update"]
+        read_only_fields = ["id", "created", "update"]

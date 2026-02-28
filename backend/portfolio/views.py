@@ -2,8 +2,9 @@ from rest_framework import viewsets
 from rest_framework.mixins import CreateModelMixin
 from rest_framework.viewsets import GenericViewSet
 
-from .models import Category, ContactSubject, Formation, Project, Technology
+from .models import AboutContent, Category, ContactSubject, Formation, Project, Technology
 from .serializers import (
+	AboutContentSerializer,
 	CategorySerializer,
 	ContactMessageSerializer,
 	ContactSubjectSerializer,
@@ -40,3 +41,8 @@ class ContactSubjectViewSet(viewsets.ReadOnlyModelViewSet):
 
 class ContactMessageViewSet(CreateModelMixin, GenericViewSet):
 	serializer_class = ContactMessageSerializer
+
+
+class AboutContentViewSet(viewsets.ReadOnlyModelViewSet):
+	queryset = AboutContent.objects.all()
+	serializer_class = AboutContentSerializer

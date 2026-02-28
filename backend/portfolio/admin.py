@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Category, ContactMessage, ContactSubject, Formation, Project, Technology
+from .models import AboutContent, Category, ContactMessage, ContactSubject, Formation, Project, Technology
 
 
 @admin.register(Category)
@@ -53,3 +53,9 @@ class ContactMessageAdmin(admin.ModelAdmin):
 	list_filter = ("status", "subject")
 	search_fields = ("full_name", "email", "phone", "message", "hash")
 	readonly_fields = ("hash", "created", "update")
+
+
+@admin.register(AboutContent)
+class AboutContentAdmin(admin.ModelAdmin):
+	list_display = ("id", "title", "created", "update")
+	search_fields = ("title",)

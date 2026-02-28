@@ -249,3 +249,19 @@ class ContactMessage(TimeStampedModel):
 
 	def __str__(self):
 		return f"{self.full_name} - {self.subject.name}"
+
+
+class AboutContent(TimeStampedModel):
+	title = models.CharField(max_length=150, default="Sobre Mim")
+	hero_image = models.ImageField(
+		upload_to=UploadWithUUID("about"),
+		blank=True,
+		null=True,
+		help_text="Imagem principal da seção Sobre Mim.",
+	)
+
+	class Meta:
+		ordering = ["-update", "-created"]
+
+	def __str__(self):
+		return self.title

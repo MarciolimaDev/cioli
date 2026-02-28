@@ -1,9 +1,42 @@
-const heroImageUrl =
+"use client";
+
+import { useEffect, useState } from "react";
+
+const fallbackHeroImageUrl =
   "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80";
 const olovaLogoUrl =
-  "https://i.postimg.cc/fWm4PqkB/Annotation-2025-03-11-102821.png";
+  "/assets/images/cioliC-black-white.ico";
 
 export default function About() {
+  const [heroImageUrl, setHeroImageUrl] = useState(fallbackHeroImageUrl);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadAboutContent() {
+      try {
+        const response = await fetch("/api/about-content", {
+          method: "GET",
+          cache: "no-store",
+        });
+
+        if (!response.ok) return;
+
+        const content = await response.json();
+        if (isMounted && content?.hero_image) {
+          setHeroImageUrl(content.hero_image);
+        }
+      } catch {
+      }
+    }
+
+    loadAboutContent();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <>
       <section id="about" className="py-16 md:py-32  text-white bg-[#04081A]">
@@ -17,7 +50,7 @@ export default function About() {
                 <img
                   src={heroImageUrl}
                   className="rounded-[15px] shadow block"
-                  alt="payments illustration"
+                  alt="Imagem de destaque da seção Sobre Mim"
                   width={1207}
                   height={929}
                 />
