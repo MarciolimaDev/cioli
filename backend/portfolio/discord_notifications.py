@@ -39,12 +39,22 @@ def send_contact_message_notification(contact_message) -> None:
 	webhook_request = request.Request(
 		webhook_url,
 		data=data,
-		headers={"Content-Type": "application/json"},
+		headers={
+			"Content-Type": "application/json",
+			"User-Agent": "Mozilla/5.0 (compatible; CIOLIWebhook/1.0; +https://cioli.dev)",
+		},
 		method="POST",
 	)
 
 	try:
 		with request.urlopen(webhook_request, timeout=5):
 			return
+	except error.HTTPError as exc:
+		response_body = exc.read().decode("utf-8", errors="replace")
+		logger.warning(
+			"Falha ao enviar notificação de contato para o Discord (HTTP %s): %s",
+			exc.code,
+			response_body,
+		)
 	except error.URLError as exc:
 		logger.warning("Falha ao enviar notificação de contato para o Discord: %s", exc)
