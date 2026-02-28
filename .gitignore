@@ -6,7 +6,6 @@ Thumbs.db
 .env
 .env.*
 !.env.example
-backend/.env.example
 
 # Logs
 *.log
@@ -43,4 +42,3 @@ coverage/
 .vercel/
 
 #fly
-backend/FLY_DEPLOY.md
