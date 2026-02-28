@@ -177,7 +177,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-WHITENOISE_USE_FINDERS = True
+WHITENOISE_USE_FINDERS = DEBUG
 
 DJANGO_USE_S3 = env_to_bool('DJANGO_USE_S3', False)
 
@@ -202,7 +202,8 @@ if DJANGO_USE_S3:
         )
 
     AWS_DEFAULT_ACL = None
-    AWS_QUERYSTRING_AUTH = False
+    AWS_QUERYSTRING_AUTH = True
+    AWS_QUERYSTRING_EXPIRE = 86400
     AWS_S3_FILE_OVERWRITE = False
     AWS_S3_SIGNATURE_VERSION = 's3v4'
 
@@ -239,7 +240,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'customer.User'
 
 CORS_ALLOWED_ORIGINS = env_to_list('CORS_ALLOWED_ORIGINS', '')
-CSRF_TRUSTED_ORIGINS = env_to_list('CSRF_TRUSTED_ORIGINS', '')
+
+trusted_origins = env_to_list('CSRF_TRUSTED_ORIGINS', '')
+for host in ALLOWED_HOSTS:
+    normalized_host = host.strip().lstrip('.').split(':')[0]
+    if normalized_host and normalized_host not in {'*', 'localhost', '127.0.0.1'}:
+        trusted_origins.append(f'https://{normalized_host}')
+
+CSRF_TRUSTED_ORIGINS = sorted(set(trusted_origins))
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
 
 if CORS_ALLOWED_ORIGINS:
     CORS_ALLOW_ALL_ORIGINS = False

@@ -71,7 +71,7 @@ export default function Projects() {
         const normalized = (Array.isArray(data) ? data : []).map((project, index) => ({
           id: project.id ?? project.hash ?? `project-${index}`,
           title: project.title ?? "Untitled Project",
-          description: project.descriptions_short || project.description || "Sem descrição",
+          description: project.description || project.descriptions_short || "Sem descrição",
           image: project.thumbnall || PLACEHOLDER_IMAGE,
           technologies: Array.isArray(project.technologies) ? project.technologies : [],
           color: PROJECT_COLORS[index % PROJECT_COLORS.length],
