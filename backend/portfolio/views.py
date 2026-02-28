@@ -12,6 +12,7 @@ from .serializers import (
 	ProjectSerializer,
 	TechnologySerializer,
 )
+from .discord_notifications import send_contact_message_notification
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -41,6 +42,10 @@ class ContactSubjectViewSet(viewsets.ReadOnlyModelViewSet):
 
 class ContactMessageViewSet(CreateModelMixin, GenericViewSet):
 	serializer_class = ContactMessageSerializer
+
+	def perform_create(self, serializer):
+		contact_message = serializer.save()
+		send_contact_message_notification(contact_message)
 
 
 class AboutContentViewSet(viewsets.ReadOnlyModelViewSet):

@@ -262,3 +262,5 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ],
 }
+
+DISCORD_CONTACT_WEBHOOK_URL = os.getenv('DISCORD_CONTACT_WEBHOOK_URL', '').strip()

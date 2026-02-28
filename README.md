@@ -67,7 +67,7 @@ flyctl apps create SEU_APP_NAME
 4. Configure os secrets (exemplo):
 
 ```bash
-flyctl secrets set DJANGO_SECRET_KEY=... DJANGO_DEBUG=False DJANGO_ALLOWED_HOSTS=SEU_APP_NAME.fly.dev CORS_ALLOWED_ORIGINS=https://SEU_FRONT.vercel.app CSRF_TRUSTED_ORIGINS=https://SEU_FRONT.vercel.app DATABASE_URL=postgresql://... DJANGO_USE_S3=True AWS_ACCESS_KEY_ID=... AWS_SECRET_ACCESS_KEY=... AWS_STORAGE_BUCKET_NAME=... AWS_S3_REGION_NAME=sa-east-1
+flyctl secrets set DJANGO_SECRET_KEY=... DJANGO_DEBUG=False DJANGO_ALLOWED_HOSTS=SEU_APP_NAME.fly.dev CORS_ALLOWED_ORIGINS=https://SEU_FRONT.vercel.app CSRF_TRUSTED_ORIGINS=https://SEU_FRONT.vercel.app DATABASE_URL=postgresql://... DJANGO_USE_S3=True AWS_ACCESS_KEY_ID=... AWS_SECRET_ACCESS_KEY=... AWS_STORAGE_BUCKET_NAME=... AWS_S3_REGION_NAME=sa-east-1 DISCORD_CONTACT_WEBHOOK_URL=https://discord.com/api/webhooks/...
 ```
 
 5. Faça deploy:
