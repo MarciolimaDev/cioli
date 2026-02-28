@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "./pages/Header/Header";
 import Footer from "./pages/Footer/Footer";
+import InspectGuard from "@/components/InspectGuard";
 
 export const metadata: Metadata = {
   title: {
@@ -23,6 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning>
+        <InspectGuard />
         <Header />
         {children}
         <Footer />
