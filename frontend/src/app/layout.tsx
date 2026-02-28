@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: "Portfólio oficial de Marcio Lima | Cioli",
   icons: {
     icon: "/logocioli-bg-blue.webp",
-    shortcut: "/logocioli-bg-blue.webp",
+    shortcut: "/logocioli-bg-white.webp",
   },
 };
 
