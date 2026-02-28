@@ -5,6 +5,11 @@ import { buildBackendApiUrl } from "@/lib/backend-url";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Formação",
+  description:
+    "Formação e trajetória acadêmica de Marcio Lima (Cioli) em tecnologia e desenvolvimento.",
+  alternates: {
+    canonical: "/education",
+  },
 };
 
 export default async function EducationPage() {

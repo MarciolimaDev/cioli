@@ -4,19 +4,60 @@ import Header from "./pages/Header/Header";
 import Footer from "./pages/Footer/Footer";
 import InspectGuard from "@/components/InspectGuard";
 
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Marcio Lima",
+  alternateName: "Cioli",
+  url: "https://cioli.online",
+  image: "https://cioli.online/logocioli-bg-white.webp",
+  jobTitle: "Desenvolvedor",
+  sameAs: ["https://cioli.online"],
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://cioli.online"),
+  applicationName: "CIOLI",
   title: {
     default: "CIOLI",
     template: "CIOLI | %s",
   },
   description: "Portfólio oficial de Marcio Lima | Cioli",
+  keywords: [
+    "Cioli",
+    "Marcio Lima",
+    "Portfólio Marcio Lima",
+    "Portifolio Marcio",
+    "Desenvolvedor",
+    "Projetos",
+  ],
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   openGraph: {
     title: "CIOLI",
     description: "Portfólio oficial de Marcio Lima | Cioli",
     url: "https://cioli.online",
     siteName: "CIOLI",
-    images: ["/logocioli-bg-white.webp"],
+    images: [
+      {
+        url: "/logocioli-bg-white.webp",
+        width: 1200,
+        height: 630,
+        alt: "CIOLI | Portfólio oficial de Marcio Lima",
+      },
+    ],
     locale: "pt_BR",
     type: "website",
   },
@@ -38,8 +79,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <body suppressHydrationWarning>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
         <InspectGuard />
         <Header />
         {children}
