@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import AboutContent, Category, ContactMessage, ContactSubject, Formation, Project, Technology
+from .models import AboutContent, Category, ContactMessage, ContactSubject, Formation, Project, ServiceRequest, Technology
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -113,3 +113,28 @@ class AboutContentSerializer(serializers.ModelSerializer):
         model = AboutContent
         fields = ["id", "title", "hero_image", "created", "update"]
         read_only_fields = ["id", "created", "update"]
+
+
+class ServiceRequestSerializer(serializers.ModelSerializer):
+    service_type = serializers.SlugRelatedField(
+        slug_field="hash",
+        queryset=ContactSubject.objects.filter(is_active=True),
+    )
+
+    class Meta:
+        model = ServiceRequest
+        fields = [
+            "hash",
+            "full_name",
+            "email",
+            "phone",
+            "service_type",
+            "project_title",
+            "project_description",
+            "logo_image",
+            "additional_info",
+            "status",
+            "created",
+            "update",
+        ]
+        read_only_fields = ["hash", "status", "created", "update"]

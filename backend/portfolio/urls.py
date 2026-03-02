@@ -8,6 +8,7 @@ from .views import (
     ContactSubjectViewSet,
     FormationViewSet,
     ProjectViewSet,
+    ServiceRequestViewSet,
     TechnologyViewSet,
 )
 
@@ -18,6 +19,7 @@ router.register("projects", ProjectViewSet, basename="project")
 router.register("formations", FormationViewSet, basename="formation")
 router.register("contact-subjects", ContactSubjectViewSet, basename="contact-subject")
 router.register("contact-messages", ContactMessageViewSet, basename="contact-message")
+router.register("service-requests", ServiceRequestViewSet, basename="service-request")
 router.register("about-content", AboutContentViewSet, basename="about-content")
 
 urlpatterns = [

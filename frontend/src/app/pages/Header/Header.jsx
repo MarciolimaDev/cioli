@@ -53,6 +53,7 @@ export default function Header() {
       path: "/education",
     },
     { id: "projects", icon: FaLaptopCode, text: "Projetos", path: "/projects" },
+    { id: "services", icon: FaBriefcase, text: "Serviços", path: "/services" },
     { id: "contact", icon: FaEnvelope, text: "Contato", path: "/contact" },
   ];
 

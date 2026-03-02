@@ -2,7 +2,7 @@ from rest_framework import viewsets
 from rest_framework.mixins import CreateModelMixin
 from rest_framework.viewsets import GenericViewSet
 
-from .models import AboutContent, Category, ContactSubject, Formation, Project, Technology
+from .models import AboutContent, Category, ContactSubject, Formation, Project, ServiceRequest, Technology
 from .throttles import ContactMessageRateThrottle
 from .serializers import (
 	AboutContentSerializer,
@@ -11,9 +11,10 @@ from .serializers import (
 	ContactSubjectSerializer,
 	FormationSerializer,
 	ProjectSerializer,
+	ServiceRequestSerializer,
 	TechnologySerializer,
 )
-from .discord_notifications import send_contact_message_notification
+from .discord_notifications import send_contact_message_notification, send_service_request_notification
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -53,3 +54,12 @@ class ContactMessageViewSet(CreateModelMixin, GenericViewSet):
 class AboutContentViewSet(viewsets.ReadOnlyModelViewSet):
 	queryset = AboutContent.objects.all()
 	serializer_class = AboutContentSerializer
+
+
+class ServiceRequestViewSet(CreateModelMixin, GenericViewSet):
+	serializer_class = ServiceRequestSerializer
+	throttle_classes = [ContactMessageRateThrottle]
+
+	def perform_create(self, serializer):
+		service_request = serializer.save()
+		send_service_request_notification(service_request)

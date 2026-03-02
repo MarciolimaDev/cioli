@@ -251,6 +251,39 @@ class ContactMessage(TimeStampedModel):
 		return f"{self.full_name} - {self.subject.name}"
 
 
+class ServiceRequest(TimeStampedModel):
+	class Status(models.TextChoices):
+		NEW = "new", "Novo"
+		UNDER_REVIEW = "under_review", "Em análise"
+		PROPOSAL_SENT = "proposal_sent", "Proposta enviada"
+		REJECTED = "rejected", "Rejeitado"
+
+	hash = models.CharField(max_length=64, unique=True, editable=False)
+	full_name = models.CharField(max_length=140)
+	email = models.EmailField()
+	phone = models.CharField(max_length=30)
+	service_type = models.ForeignKey(ContactSubject, on_delete=models.PROTECT, related_name="service_requests")
+	project_title = models.CharField(max_length=200)
+	project_description = models.TextField()
+	logo_image = models.ImageField(
+		upload_to=UploadWithUUID("service-requests/logos"),
+		blank=True,
+		null=True,
+	)
+	additional_info = models.TextField(blank=True, null=True)
+	status = models.CharField(max_length=20, choices=Status.choices, default=Status.NEW)
+
+	class Meta:
+		ordering = ["-created"]
+
+	def save(self, *args, **kwargs):
+		if not self.hash:
+			self.hash = hashlib.sha256(uuid.uuid4().hex.encode()).hexdigest()
+		return super().save(*args, **kwargs)
+
+	def __str__(self):
+		return f"{self.full_name} - {self.project_title}"
+
 class AboutContent(TimeStampedModel):
 	title = models.CharField(max_length=150, default="Sobre Mim")
 	hero_image = models.ImageField(
