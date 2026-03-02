@@ -10,6 +10,7 @@ export default function Contact() {
     subject: "",
     phone: "",
     message: "",
+    privacyConsent: false,
   });
 
   const [subjects, setSubjects] = useState([]);
@@ -85,6 +86,11 @@ export default function Contact() {
       isValid = false;
     }
 
+    if (!formData.privacyConsent) {
+      tempErrors.privacyConsent = "Você precisa concordar com a Política de Privacidade";
+      isValid = false;
+    }
+
     setErrors(tempErrors);
     return isValid;
   };
@@ -103,7 +109,10 @@ export default function Contact() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          privacy_consent: formData.privacyConsent,
+        }),
       });
 
       const result = await response.json().catch(() => ({}));
@@ -116,6 +125,7 @@ export default function Contact() {
           subject: "",
           phone: "",
           message: "",
+          privacyConsent: false,
         });
         setErrors({});
       } else {
@@ -270,6 +280,35 @@ export default function Contact() {
                       </p>
                     )}
                   </div>
+                </div>
+
+                {/* Privacy Consent */}
+                <div className="space-y-2">
+                  <label className="flex items-start gap-3 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={formData.privacyConsent}
+                      onChange={(e) =>
+                        setFormData({ ...formData, privacyConsent: e.target.checked })
+                      }
+                      className="mt-1 w-4 h-4 rounded border-gray-700 bg-white/5 text-[#0890F8] focus:ring-[#0890F8] focus:ring-offset-0 cursor-pointer"
+                    />
+                    <span className="text-sm text-gray-300 group-hover:text-gray-200 transition-colors">
+                      Li e concordo com a{" "}
+                      <a
+                        href="/privacy-policy"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#0890F8] hover:text-[#199FFF] underline font-semibold"
+                      >
+                        Política de Privacidade
+                      </a>
+                      {" "}e autorizo contato por email e WhatsApp para responder minha solicitação.
+                    </span>
+                  </label>
+                  {errors.privacyConsent && (
+                    <p className="text-red-500 text-sm">{errors.privacyConsent}</p>
+                  )}
                 </div>
 
                 <button

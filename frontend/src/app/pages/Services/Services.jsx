@@ -14,6 +14,7 @@ export default function Services() {
     project_description: "",
     logo_image: null,
     additional_info: "",
+    privacyConsent: false,
   });
 
   const [errors, setErrors] = useState({});
@@ -95,6 +96,11 @@ export default function Services() {
       isValid = false;
     }
 
+    if (!formData.privacyConsent) {
+      tempErrors.privacyConsent = "Você precisa concordar com a Política de Privacidade";
+      isValid = false;
+    }
+
     setErrors(tempErrors);
     return isValid;
   };
@@ -124,6 +130,7 @@ export default function Services() {
       payload.append("project_title", formData.project_title);
       payload.append("project_description", formData.project_description);
       payload.append("additional_info", formData.additional_info);
+      payload.append("privacy_consent", formData.privacyConsent);
       if (formData.logo_image) {
         payload.append("logo_image", formData.logo_image);
       }
@@ -145,6 +152,7 @@ export default function Services() {
           project_description: "",
           logo_image: null,
           additional_info: "",
+          privacyConsent: false,
         });
         setErrors({});
 
@@ -183,7 +191,7 @@ export default function Services() {
   };
 
   return (
-    <main className="pt-20 lg:pt-[0rem] bg-[#04081A] text-white min-h-screen">
+    <main className="pt-20 mb-20 lg:pt-[0rem] bg-[#04081A] text-white min-h-screen">
       <section className="hero min-h-screen flex items-center relative px-4 sm:px-6 lg:px-8">
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -216,7 +224,7 @@ export default function Services() {
             </div>
 
             {/* Service Form */}
-            <div className="backdrop-blur-lg bg-white/5 p-8 rounded-2xl shadow-xl max-h-[90vh] overflow-y-auto">
+            <div className="backdrop-blur-lg bg-white/5 p-8 rounded-2xl shadow-xl">
               <form onSubmit={handleSubmit} className="space-y-5">
                 {/* Personal Info */}
                 <div>
@@ -408,6 +416,35 @@ export default function Services() {
                       })
                     }
                   />
+                </div>
+
+                {/* Privacy Consent */}
+                <div className="space-y-2 mt-6">
+                  <label className="flex items-start gap-3 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={formData.privacyConsent}
+                      onChange={(e) =>
+                        setFormData({ ...formData, privacyConsent: e.target.checked })
+                      }
+                      className="mt-1 w-4 h-4 rounded border-gray-700 bg-white/5 text-[#0890F8] focus:ring-[#0890F8] focus:ring-offset-0 cursor-pointer"
+                    />
+                    <span className="text-sm text-gray-300 group-hover:text-gray-200 transition-colors">
+                      Li e concordo com a{" "}
+                      <a
+                        href="/privacy-policy"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#0890F8] hover:text-[#199FFF] underline font-semibold"
+                      >
+                        Política de Privacidade
+                      </a>
+                      {" "}e autorizo contato por email e WhatsApp para elaboração de orçamento e discussão do projeto.
+                    </span>
+                  </label>
+                  {errors.privacyConsent && (
+                    <p className="text-red-500 text-sm">{errors.privacyConsent}</p>
+                  )}
                 </div>
 
                 {/* Submit Button */}

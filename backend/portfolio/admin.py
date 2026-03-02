@@ -49,10 +49,23 @@ class ContactSubjectAdmin(admin.ModelAdmin):
 
 @admin.register(ContactMessage)
 class ContactMessageAdmin(admin.ModelAdmin):
-	list_display = ("id", "full_name", "email", "phone", "subject", "status", "created")
-	list_filter = ("status", "subject")
+	list_display = ("id", "full_name", "email", "phone", "subject", "status", "privacy_consent", "created")
+	list_filter = ("status", "subject", "privacy_consent")
 	search_fields = ("full_name", "email", "phone", "message", "hash")
-	readonly_fields = ("hash", "created", "update")
+	readonly_fields = ("hash", "privacy_consent_date", "created", "update")
+	fieldsets = (
+		("Informa\u00e7\u00f5es de Contato", {
+			"fields": ("hash", "full_name", "email", "phone", "subject", "message", "status")
+		}),
+		("Consentimento LGPD", {
+			"fields": ("privacy_consent", "privacy_consent_date", "privacy_policy_version"),
+			"classes": ("collapse",),
+		}),
+		("Metadados", {
+			"fields": ("created", "update"),
+			"classes": ("collapse",),
+		}),
+	)
 
 
 @admin.register(AboutContent)
@@ -63,7 +76,23 @@ class AboutContentAdmin(admin.ModelAdmin):
 
 @admin.register(ServiceRequest)
 class ServiceRequestAdmin(admin.ModelAdmin):
-	list_display = ("id", "full_name", "email", "service_type", "project_title", "logo_image", "status", "created")
-	list_filter = ("status", "service_type")
+	list_display = ("id", "full_name", "email", "service_type", "project_title", "logo_image", "status", "privacy_consent", "created")
+	list_filter = ("status", "service_type", "privacy_consent")
 	search_fields = ("full_name", "email", "phone", "project_title", "project_description", "hash")
-	readonly_fields = ("hash", "created", "update")
+	readonly_fields = ("hash", "privacy_consent_date", "created", "update")
+	fieldsets = (
+		("Informa\u00e7\u00f5es do Cliente", {
+			"fields": ("hash", "full_name", "email", "phone", "service_type")
+		}),
+		("Informa\u00e7\u00f5es do Projeto", {
+			"fields": ("project_title", "project_description", "logo_image", "additional_info", "status")
+		}),
+		("Consentimento LGPD", {
+			"fields": ("privacy_consent", "privacy_consent_date", "privacy_policy_version"),
+			"classes": ("collapse",),
+		}),
+		("Metadados", {
+			"fields": ("created", "update"),
+			"classes": ("collapse",),
+		}),
+	)

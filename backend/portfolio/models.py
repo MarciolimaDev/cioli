@@ -4,6 +4,7 @@ import uuid
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 from django.utils.deconstruct import deconstructible
 from django.utils.text import slugify
 
@@ -238,6 +239,20 @@ class ContactMessage(TimeStampedModel):
 	subject = models.ForeignKey(ContactSubject, on_delete=models.PROTECT, related_name="messages")
 	message = models.TextField()
 	status = models.CharField(max_length=20, choices=Status.choices, default=Status.NEW)
+	privacy_consent = models.BooleanField(
+		default=False,
+		help_text="Indica se o usuário consentiu com a Política de Privacidade (LGPD)"
+	)
+	privacy_consent_date = models.DateTimeField(
+		null=True,
+		blank=True,
+		help_text="Data e hora em que o consentimento foi registrado"
+	)
+	privacy_policy_version = models.CharField(
+		max_length=20,
+		default="1.0",
+		help_text="Versão da Política de Privacidade aceita pelo usuário"
+	)
 
 	class Meta:
 		ordering = ["-created"]
@@ -245,6 +260,9 @@ class ContactMessage(TimeStampedModel):
 	def save(self, *args, **kwargs):
 		if not self.hash:
 			self.hash = hashlib.sha256(uuid.uuid4().hex.encode()).hexdigest()
+		# Define a data do consentimento se o usuário consentiu e a data ainda não foi registrada
+		if self.privacy_consent and not self.privacy_consent_date:
+			self.privacy_consent_date = timezone.now()
 		return super().save(*args, **kwargs)
 
 	def __str__(self):
@@ -272,6 +290,20 @@ class ServiceRequest(TimeStampedModel):
 	)
 	additional_info = models.TextField(blank=True, null=True)
 	status = models.CharField(max_length=20, choices=Status.choices, default=Status.NEW)
+	privacy_consent = models.BooleanField(
+		default=False,
+		help_text="Indica se o usuário consentiu com a Política de Privacidade (LGPD)"
+	)
+	privacy_consent_date = models.DateTimeField(
+		null=True,
+		blank=True,
+		help_text="Data e hora em que o consentimento foi registrado"
+	)
+	privacy_policy_version = models.CharField(
+		max_length=20,
+		default="1.0",
+		help_text="Versão da Política de Privacidade aceita pelo usuário"
+	)
 
 	class Meta:
 		ordering = ["-created"]
@@ -279,6 +311,9 @@ class ServiceRequest(TimeStampedModel):
 	def save(self, *args, **kwargs):
 		if not self.hash:
 			self.hash = hashlib.sha256(uuid.uuid4().hex.encode()).hexdigest()
+		# Define a data do consentimento se o usuário consentiu e a data ainda não foi registrada
+		if self.privacy_consent and not self.privacy_consent_date:
+			self.privacy_consent_date = timezone.now()
 		return super().save(*args, **kwargs)
 
 	def __str__(self):

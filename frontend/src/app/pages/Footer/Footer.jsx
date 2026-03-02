@@ -29,6 +29,12 @@ export default function Footer() {
             >
               Email
             </a>
+            <a
+              href="/privacy-policy"
+              className="transition-colors hover:text-[#199FFF]"
+            >
+              Privacidade
+            </a>
           </div>
         </div>
 

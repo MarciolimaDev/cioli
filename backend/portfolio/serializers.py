@@ -102,10 +102,13 @@ class ContactMessageSerializer(serializers.ModelSerializer):
             "subject",
             "message",
             "status",
+            "privacy_consent",
+            "privacy_consent_date",
+            "privacy_policy_version",
             "created",
             "update",
         ]
-        read_only_fields = ["hash", "status", "created", "update"]
+        read_only_fields = ["hash", "status", "privacy_consent_date", "created", "update"]
 
 
 class AboutContentSerializer(serializers.ModelSerializer):
@@ -134,7 +137,10 @@ class ServiceRequestSerializer(serializers.ModelSerializer):
             "logo_image",
             "additional_info",
             "status",
+            "privacy_consent",
+            "privacy_consent_date",
+            "privacy_policy_version",
             "created",
             "update",
         ]
-        read_only_fields = ["hash", "status", "created", "update"]
+        read_only_fields = ["hash", "status", "privacy_consent_date", "created", "update"]

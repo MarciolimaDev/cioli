@@ -83,7 +83,7 @@ export default function Header() {
             {/* Mobile Menu Button */}
             <div className="flex justify-between items-center md:hidden px-2">
               <Link href="/" className="text-white font-bold">
-                Portfolio
+                Marcio Lima | Cioli
               </Link>
               <button 
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
