@@ -76,16 +76,29 @@ class AboutContentAdmin(admin.ModelAdmin):
 
 @admin.register(ServiceRequest)
 class ServiceRequestAdmin(admin.ModelAdmin):
-	list_display = ("id", "full_name", "email", "service_type", "project_title", "logo_image", "status", "privacy_consent", "created")
+	list_display = ("id", "full_name", "email", "service_type", "project_title", "timeline", "budget_range", "status", "privacy_consent", "created")
 	list_filter = ("status", "service_type", "privacy_consent")
-	search_fields = ("full_name", "email", "phone", "project_title", "project_description", "hash")
+	search_fields = ("full_name", "email", "phone", "project_title", "project_description", "reference_links", "hash")
 	readonly_fields = ("hash", "privacy_consent_date", "created", "update")
 	fieldsets = (
 		("Informa\u00e7\u00f5es do Cliente", {
 			"fields": ("hash", "full_name", "email", "phone", "service_type")
 		}),
 		("Informa\u00e7\u00f5es do Projeto", {
-			"fields": ("project_title", "project_description", "logo_image", "additional_info", "status")
+			"fields": (
+				"project_title",
+				"project_description",
+				"logo_image",
+				"brand_identity_status",
+				"brand_manual_file",
+				"reference_links",
+				"primary_color",
+				"secondary_color",
+				"timeline",
+				"budget_range",
+				"additional_info",
+				"status",
+			)
 		}),
 		("Consentimento LGPD", {
 			"fields": ("privacy_consent", "privacy_consent_date", "privacy_policy_version"),

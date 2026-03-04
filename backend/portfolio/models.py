@@ -276,6 +276,25 @@ class ServiceRequest(TimeStampedModel):
 		PROPOSAL_SENT = "proposal_sent", "Proposta enviada"
 		REJECTED = "rejected", "Rejeitado"
 
+	class BrandIdentityStatus(models.TextChoices):
+		MANUAL = "manual", "Sim, tenho manual da marca"
+		LOGO_ONLY = "logo_only", "Tenho apenas a logo"
+		NONE = "none", "Ainda não tenho identidade visual"
+
+	class Timeline(models.TextChoices):
+		NO_RUSH = "no_rush", "Sem pressa"
+		ONE_MONTH = "1_month", "1 mês"
+		TWO_THREE_MONTHS = "2_3_months", "2–3 meses"
+		MORE_THAN_THREE_MONTHS = "more_than_3_months", "Mais de 3 meses"
+		URGENT = "urgent", "Urgente"
+
+	class BudgetRange(models.TextChoices):
+		UNKNOWN = "unknown", "Ainda não sei"
+		ONE_TO_THREE = "1k_3k", "R$ 1k – 3k"
+		THREE_TO_EIGHT = "3k_8k", "R$ 3k – 8k"
+		EIGHT_TO_TWENTY = "8k_20k", "R$ 8k – 20k"
+		TWENTY_PLUS = "20k_plus", "Acima de R$ 20k"
+
 	hash = models.CharField(max_length=64, unique=True, editable=False)
 	full_name = models.CharField(max_length=140)
 	email = models.EmailField()
@@ -285,6 +304,27 @@ class ServiceRequest(TimeStampedModel):
 	project_description = models.TextField()
 	logo_image = models.ImageField(
 		upload_to=UploadWithUUID("service-requests/logos"),
+		blank=True,
+		null=True,
+	)
+	brand_identity_status = models.CharField(
+		max_length=30,
+		choices=BrandIdentityStatus.choices,
+		blank=True,
+		null=True,
+	)
+	brand_manual_file = models.FileField(
+		upload_to=UploadWithUUID("service-requests/brand-manuals"),
+		blank=True,
+		null=True,
+	)
+	reference_links = models.TextField(blank=True, null=True)
+	primary_color = models.CharField(max_length=7, blank=True, null=True)
+	secondary_color = models.CharField(max_length=7, blank=True, null=True)
+	timeline = models.CharField(max_length=25, choices=Timeline.choices, blank=True, null=True)
+	budget_range = models.CharField(
+		max_length=20,
+		choices=BudgetRange.choices,
 		blank=True,
 		null=True,
 	)

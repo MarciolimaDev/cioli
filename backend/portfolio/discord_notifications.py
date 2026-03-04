@@ -72,6 +72,12 @@ def send_service_request_notification(service_request) -> None:
 	logo_value = "Não enviada"
 	if getattr(service_request, "logo_image", None):
 		logo_value = service_request.logo_image.name[:1024]
+	brand_manual_value = "Não enviado"
+	if getattr(service_request, "brand_manual_file", None):
+		brand_manual_value = service_request.brand_manual_file.name[:1024]
+	brand_identity_display = service_request.get_brand_identity_status_display() if service_request.brand_identity_status else "Não informado"
+	timeline_display = service_request.get_timeline_display() if service_request.timeline else "Não informado"
+	budget_display = service_request.get_budget_range_display() if service_request.budget_range else "Não informado"
 
 	payload = {
 		"username": "CIOLI - Contato",
@@ -86,9 +92,26 @@ def send_service_request_notification(service_request) -> None:
 					{"name": "Email", "value": service_request.email[:1024], "inline": False},
 					{"name": "Telefone", "value": service_request.phone[:1024], "inline": False},
 					{"name": "Tipo de serviço", "value": service_request.service_type.name[:1024], "inline": False},
-					{"name": "Título do projeto", "value": service_request.project_title[:1024], "inline": False},
+					{"name": "Objetivo do projeto", "value": service_request.project_title[:1024], "inline": False},
 					{"name": "Descrição", "value": service_request.project_description[:1024], "inline": False},
 					{"name": "Logo", "value": logo_value, "inline": False},
+					{"name": "Identidade visual", "value": brand_identity_display[:1024], "inline": False},
+					{"name": "Manual da marca", "value": brand_manual_value, "inline": False},
+					{
+						"name": "Referências",
+						"value": (service_request.reference_links or "Não informado")[:1024],
+						"inline": False,
+					},
+					{
+						"name": "Cores preferidas",
+						"value": (
+							f"Principal: {service_request.primary_color or 'Não informado'} | "
+							f"Secundária: {service_request.secondary_color or 'Não informado'}"
+						)[:1024],
+						"inline": False,
+					},
+					{"name": "Prazo", "value": timeline_display[:1024], "inline": False},
+					{"name": "Faixa de investimento", "value": budget_display[:1024], "inline": False},
 					{
 						"name": "Informações adicionais",
 						"value": (service_request.additional_info or "Não informado")[:1024],
