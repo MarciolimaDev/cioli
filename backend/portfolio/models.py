@@ -359,6 +359,121 @@ class ServiceRequest(TimeStampedModel):
 	def __str__(self):
 		return f"{self.full_name} - {self.project_title}"
 
+
+class Client(TimeStampedModel):
+	class Status(models.TextChoices):
+		LEAD = "lead", "Lead"
+		ACTIVE = "active", "Ativo"
+		INACTIVE = "inactive", "Inativo"
+
+	name = models.CharField(max_length=180)
+	slug = models.SlugField(max_length=220, unique=True, blank=True)
+	hash = models.CharField(max_length=64, unique=True, editable=False)
+	company_name = models.CharField(max_length=180, blank=True, null=True)
+	email = models.EmailField()
+	phone = models.CharField(max_length=30, blank=True, null=True)
+	document = models.CharField(max_length=30, blank=True, null=True)
+	status = models.CharField(max_length=20, choices=Status.choices, default=Status.ACTIVE)
+	notes = models.TextField(blank=True)
+
+	class Meta:
+		ordering = ["name"]
+
+	def save(self, *args, **kwargs):
+		if not self.slug:
+			base_slug = slugify(self.company_name or self.name)
+			slug_candidate = base_slug
+			index = 2
+			while Client.objects.filter(slug=slug_candidate).exclude(pk=self.pk).exists():
+				slug_candidate = f"{base_slug}-{index}"
+				index += 1
+			self.slug = slug_candidate
+
+		if not self.hash:
+			self.hash = hashlib.sha256(uuid.uuid4().hex.encode()).hexdigest()
+
+		return super().save(*args, **kwargs)
+
+	def __str__(self):
+		return self.company_name or self.name
+
+
+class ClientProject(TimeStampedModel):
+	class Status(models.TextChoices):
+		PROPOSAL = "proposal", "Proposta"
+		ACTIVE = "active", "Em execucao"
+		COMPLETED = "completed", "Concluido"
+		CANCELLED = "cancelled", "Cancelado"
+
+	client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="projects")
+	title = models.CharField(max_length=180)
+	slug = models.SlugField(max_length=220, unique=True, blank=True)
+	hash = models.CharField(max_length=64, unique=True, editable=False)
+	description = models.TextField(blank=True)
+	service_type = models.CharField(max_length=120, blank=True, null=True)
+	agreed_amount = models.DecimalField(max_digits=12, decimal_places=2)
+	installments_count = models.PositiveIntegerField(default=1)
+	start_date = models.DateField(default=timezone.localdate)
+	status = models.CharField(max_length=20, choices=Status.choices, default=Status.ACTIVE)
+
+	class Meta:
+		ordering = ["-created"]
+
+	def save(self, *args, **kwargs):
+		if not self.slug:
+			base_slug = slugify(self.title)
+			slug_candidate = base_slug
+			index = 2
+			while ClientProject.objects.filter(slug=slug_candidate).exclude(pk=self.pk).exists():
+				slug_candidate = f"{base_slug}-{index}"
+				index += 1
+			self.slug = slug_candidate
+
+		if not self.hash:
+			self.hash = hashlib.sha256(uuid.uuid4().hex.encode()).hexdigest()
+
+		return super().save(*args, **kwargs)
+
+	def __str__(self):
+		return self.title
+
+
+class ProjectInstallment(TimeStampedModel):
+	project = models.ForeignKey(ClientProject, on_delete=models.CASCADE, related_name="installments")
+	hash = models.CharField(max_length=64, unique=True, editable=False)
+	installment_number = models.PositiveIntegerField()
+	description = models.CharField(max_length=180, blank=True)
+	amount = models.DecimalField(max_digits=12, decimal_places=2)
+	due_date = models.DateField()
+	paid_amount = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True)
+	paid_at = models.DateField(blank=True, null=True)
+	notes = models.TextField(blank=True)
+
+	class Meta:
+		ordering = ["due_date", "installment_number"]
+		unique_together = ("project", "installment_number")
+
+	def save(self, *args, **kwargs):
+		if not self.hash:
+			self.hash = hashlib.sha256(uuid.uuid4().hex.encode()).hexdigest()
+
+		if self.paid_amount is None and self.paid_at:
+			self.paid_amount = self.amount
+
+		return super().save(*args, **kwargs)
+
+	@property
+	def is_paid(self):
+		return self.paid_at is not None
+
+	@property
+	def is_overdue(self):
+		return not self.is_paid and self.due_date < timezone.localdate()
+
+	def __str__(self):
+		return f"{self.project.title} - Parcela {self.installment_number}"
+
+
 class AboutContent(TimeStampedModel):
 	title = models.CharField(max_length=150, default="Sobre Mim")
 	hero_image = models.ImageField(

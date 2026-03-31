@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Header from "./pages/Header/Header";
-import Footer from "./pages/Footer/Footer";
 import InspectGuard from "@/components/InspectGuard";
+import AppShell from "@/components/AppShell";
 
 const personJsonLd = {
   "@context": "https://schema.org",
@@ -86,9 +85,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
         <InspectGuard />
-        <Header />
-        {children}
-        <Footer />
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );

@@ -35,6 +35,18 @@ export default function Footer() {
             >
               Privacidade
             </a>
+            <a
+              href="/terms-of-service"
+              className="transition-colors hover:text-[#199FFF]"
+            >
+              Termos
+            </a>
+            <a
+              href="/data-deletion"
+              className="transition-colors hover:text-[#199FFF]"
+            >
+              Exclusao de Dados
+            </a>
           </div>
         </div>
 

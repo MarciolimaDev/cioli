@@ -1,6 +1,18 @@
 from django.contrib import admin
 
-from .models import AboutContent, Category, ContactMessage, ContactSubject, Formation, Project, ServiceRequest, Technology
+from .models import (
+	AboutContent,
+	Category,
+	Client,
+	ClientProject,
+	ContactMessage,
+	ContactSubject,
+	Formation,
+	Project,
+	ProjectInstallment,
+	ServiceRequest,
+	Technology,
+)
 
 
 @admin.register(Category)
@@ -109,3 +121,42 @@ class ServiceRequestAdmin(admin.ModelAdmin):
 			"classes": ("collapse",),
 		}),
 	)
+
+
+@admin.register(Client)
+class ClientAdmin(admin.ModelAdmin):
+	list_display = ("id", "name", "company_name", "email", "phone", "status", "created")
+	list_filter = ("status",)
+	search_fields = ("name", "company_name", "email", "phone", "hash", "document")
+
+
+@admin.register(ClientProject)
+class ClientProjectAdmin(admin.ModelAdmin):
+	list_display = (
+		"id",
+		"title",
+		"client",
+		"service_type",
+		"agreed_amount",
+		"installments_count",
+		"status",
+		"start_date",
+	)
+	list_filter = ("status", "start_date")
+	search_fields = ("title", "client__name", "client__company_name", "hash", "service_type")
+
+
+@admin.register(ProjectInstallment)
+class ProjectInstallmentAdmin(admin.ModelAdmin):
+	list_display = (
+		"id",
+		"project",
+		"installment_number",
+		"amount",
+		"due_date",
+		"paid_amount",
+		"paid_at",
+		"created",
+	)
+	list_filter = ("due_date", "paid_at")
+	search_fields = ("project__title", "project__client__name", "project__client__company_name", "hash")
